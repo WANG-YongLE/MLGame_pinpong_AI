@@ -23,6 +23,7 @@ class MLPlay:
             return "RESET"
         command = "NONE"
         if self.side == "1P":
+
             if not self.ball_served:
                 self.ball_served = True
                 return "SERVE_TO_RIGHT"           # Red 紅色 下方
