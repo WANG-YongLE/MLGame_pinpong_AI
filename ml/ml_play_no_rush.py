@@ -1,9 +1,10 @@
 """
 The template of the script for the machine learning process in game pingpong
 """
+from ml.prediction import Prediction
 import pygame
 
-
+prediction=Prediction()
 class MLPlay:
     def __init__(self, ai_name, *args, **kwargs):
         """
@@ -23,19 +24,15 @@ class MLPlay:
             return "RESET"
         command = "NONE"
         if self.side == "1P":
-            if not self.ball_served:
-                self.ball_served = True
-                return "SERVE_TO_RIGHT"           # Red 紅色 下方
-            if pygame.K_UP in keyboard:
-                command = "SERVE_TO_LEFT"
-                self.ball_served = True
-            elif pygame.K_DOWN in keyboard:
-                command = "SERVE_TO_RIGHT"
-                self.ball_served = True
-            elif pygame.K_LEFT in keyboard:
-                command = "MOVE_LEFT"
-            elif pygame.K_RIGHT in keyboard:
-                command = "MOVE_RIGHT"
+            x=prediction.dicision_position_up_or_down(scene_info)
+            print(x)
+            if(x==-1) : command="NONE"
+            elif(x<scene_info["platform_1P"][0]+15) :
+                command="MOVE_LEFT"
+            elif(x>scene_info["platform_1P"][0]+25):
+                command="MOVE_RIGHT"
+            # Red 紅色 下方
+            
 
 
         elif self.side == "2P":
