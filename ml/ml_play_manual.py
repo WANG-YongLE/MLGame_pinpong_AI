@@ -51,7 +51,7 @@ class MLPlay:
                 command = "MOVE_LEFT"
             elif pygame.K_d in keyboard:
                 command = "MOVE_RIGHT"
-
+        print("frame_used:", scene_info["frame"],"ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"])
         return command
 
     def reset(self):

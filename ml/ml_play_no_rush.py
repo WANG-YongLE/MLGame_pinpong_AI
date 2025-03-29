@@ -28,16 +28,12 @@ class MLPlay:
             if not self.ball_served:
                 self.ball_served = True
                 return "SERVE_TO_RIGHT"
-            x=prediction.dicision_position_up_or_down(scene_info,ball=scene_info["ball"],ball_speed=scene_info["ball_speed"])
-            position=prediction.dicision_position_blocker(scene_info,ball=scene_info["ball"],ball_speed=scene_info["ball_speed"])
-            speed=scene_info["platform_1P"][0]-self.blocker_before
-            whether_hit=prediction.whether_hit_block(scene_info,speed,position,ball=scene_info["ball"],ball_speed=scene_info["ball_speed"])
-            if(whether_hit==2) :
-                x=prediction.dicision_position_blocker(scene_info,(position,250),(-scene_info["ball_speed"][0],scene_info["ball_speed"][1]))
-            elif(whether_hit==1) :
-                if(abs(scene_info["ball"][1]-scene_info["platform_1P"][1])<=abs(2*scene_info["ball_speed"][1])) : 
-                    if(scene_info["ball_speed"][0]>0): return "MOVE_RIGHT"
-                    else: return "MOVE_LEFT"
+            x=-1
+            blocker_d=scene_info["blocker"][0]-self.blocker_before
+            x=prediction.predict(self,scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,0)
+
+
+
                 
             
             print("frame_used:", scene_info["frame"], "prdiction:", x, "ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"])
