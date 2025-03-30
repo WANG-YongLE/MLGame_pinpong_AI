@@ -39,8 +39,16 @@ class Prediction:
             next_ball_x = 195
             ball_speed_x = -ball_speed_x
 
-        if (((next_ball_y-235)*(ball_y-235)<=0 or (next_ball_y-265)*(ball_y-265)<=0) and ((next_ball_x-new_block+5)*(ball_x-new_block+5)<=0 or(next_ball_x-new_block-35)*(ball_x-new_block-35<=0))) :
+        elif (((next_ball_y+5-240)*(ball_y-240)<=0 or 
+               (next_ball_y-260)*(ball_y+5-260)<=0 or
+               (next_ball_y-240)*(ball_y+5-240)<=0 or
+               (next_ball_y+5-260)*(ball_y-260)<=0) and 
+               ((next_ball_x+5-new_block)*(ball_x-block)<=0 or
+                (next_ball_x-new_block-30)*(ball_x+5-block-30)<=0 or
+                (next_ball_x-new_block)*(ball_x+5-block)<=0 or
+                (next_ball_x+5-new_block-30)*(ball_x-block-30<=0))):
             print((ball_x,ball_y),ball_speed_x,ball_speed_y,block,"K",frame)
+            if(ball_speed_x==0): return 0
             a = ball_speed_y / ball_speed_x
             pos_str=(-2,-1)
             pos_row=(-1,-2)
@@ -87,24 +95,7 @@ class Prediction:
                     if(pos_row[0]>=new_block-5 and pos_row[0]<=new_block+30) :
                         next_ball_y=240-5
                         ball_speed_y=-ball_speed_y   
-
-
-
-
-            if(pos_row[0]>=new_block and pos_row[0]<=new_block+30) :
-                if(ball_speed_y>0) : 
-                    next_ball_y=240-5
-                else : 
-                    next_ball_y=260
-                ball_speed_y=-ball_speed_y
-            
-            if(pos_str[1]>=240 and pos_str[1]<=260) :
-                if(ball_speed_x>0) :
-                    next_ball_x=new_block-5
-                else : 
-                    next_ball_x=new_block+30
-                ball_speed_x=-ball_speed_x
-            print((next_ball_x,next_ball_y),pos_str,pos_row,ball_speed_x,ball_speed_y,new_block,"S",frame+1)
+            print(ball_speed_x,ball_speed_y,(next_ball_x,next_ball_y),pos_str,pos_row,new_block,"S",frame+1)
 
         
         return self.predict((next_ball_x,next_ball_y),(ball_speed_x,ball_speed_y),new_block,blocker_d,frame+1,time+1)  

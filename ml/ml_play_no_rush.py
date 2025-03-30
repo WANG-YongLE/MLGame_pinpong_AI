@@ -2,7 +2,7 @@
 The template of the script for the machine learning process in game pingpong
 """
 from ml.prediction import Prediction
-import pygame
+
 
 prediction=Prediction()
 class MLPlay:
