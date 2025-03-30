@@ -16,7 +16,8 @@ class MLPlay:
         self.ball_served = False
         self.side = ai_name
         self.blocker_before=-1
-
+        self.buffer=[]
+        self.time_of_hit=0
     def update(self, scene_info, keyboard=[], *args, **kwargs):
         """
         Generate the command according to the received scene information
@@ -30,13 +31,14 @@ class MLPlay:
                 return "SERVE_TO_RIGHT"
             x=-1
             blocker_d=scene_info["blocker"][0]-self.blocker_before
-            x=prediction.predict(self,scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,0)
 
-
+            v=prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],0)
+            x=v[0]
+            prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],665)
 
                 
             
-            print("frame_used:", scene_info["frame"], "prdiction:", x, "ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"])
+            print("frame_used:", scene_info["frame"], "prdiction:", v, "ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"])
             if(x==-1) : command="NONE"
             elif(x<scene_info["platform_1P"][0]+18.5) :
                 command="MOVE_LEFT"
