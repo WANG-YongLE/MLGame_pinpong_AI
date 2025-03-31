@@ -6,8 +6,12 @@ class Prediction:
             ball_speed = (ball_speed[0] + (1 if ball_speed[0] > 0 else -1),
                           ball_speed[1] + (1 if ball_speed[1] > 0 else -1))
         if(time>=666) :return (ball,ball_speed,block,blocker_d,frame)
-        if(string=="DOWN" and ball[1]==415) :
+        if((string=="DOWN" or string=="MINDOW" )and ball[1]==415) :
             return (ball,ball_speed,block,blocker_d,frame)
+        if(string =="UP" and time >=4 and ball[1]==415) :
+            return (ball,ball_speed,block,blocker_d,frame)
+        if(string =="UP" and time >=4 and ball[1]==80) :
+            return (ball,ball_speed,block,blocker_d,frame)       
         if block == 0:
             blocker_d = 5
         elif block == 170:
@@ -21,21 +25,27 @@ class Prediction:
         # 處理牆壁反彈
         if next_ball_y >= 415:
             next_ball_y = 415
-            ball_speed_y = -ball_speed_y
             if(string=="DOWN") :
                 a=0
                 if(ball_speed_x==0) : return None
-                else : a= -ball_speed_y / ball_speed_x
+                else : a= ball_speed_y / ball_speed_x
                 b = ball_y - a * ball_x
                 next_ball_x,next_ball_y=self.find_intersection_row(a,b,415)
+
+            ball_speed_y = -ball_speed_y
+                
                 
             
         elif next_ball_y <= 80:
             next_ball_y = 80
-            if(abs(ball_speed_x)!=abs(ball_speed_y)) :
-                if(ball_speed_x<0) :ball_speed_x+=3
-                else : ball_speed_x-=3
+            origin_ball_speed=abs(ball_speed_y)
+            if(slide==2) :
+                origin_ball_speed+=3
+            elif(slide==3) :
+                origin_ball_speed*=-1
+            ball_speed_x=origin_ball_speed if ball_speed[0] > 0 else -origin_ball_speed
             ball_speed_y = -ball_speed_y
+            
 
 
         if next_ball_x <= 0:
@@ -72,7 +82,7 @@ class Prediction:
             next_ball_rect,next_speed=physics.bounce_off(
                 next_ball_rect,ball_speed,
                 next_blocker_rect,blocker_speed)
-            print((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,frame+1,"S")
+      #      print((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,frame+1,"S")
             return self.predict((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,blocker_d,frame+1,time+1,string,slide)
         
         return self.predict((next_ball_x,next_ball_y),(ball_speed_x,ball_speed_y),new_block,blocker_d,frame+1,time+1,string,slide)  
