@@ -2,7 +2,7 @@
 The template of the script for the machine learning process in game pingpong
 """
 from ml.prediction import Prediction
-
+import pygame
 
 prediction=Prediction()
 class MLPlay:
@@ -34,18 +34,18 @@ class MLPlay:
 
             v=prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],0)
             x=v[0]
-            prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],665)
+           # prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],665)
 
                 
             
-            print("frame_used:", scene_info["frame"], "prdiction:", v, "ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"])
+            
             if(x==-1) : command="NONE"
-            elif(x<scene_info["platform_1P"][0]+18.5) :
+            elif(x<=scene_info["platform_1P"][0]+10) :
                 command="MOVE_LEFT"
-            elif(x>scene_info["platform_1P"][0]+22.5):
+            elif(x>=scene_info["platform_1P"][0]+30):
                 command="MOVE_RIGHT"
             # Red 紅色 下方
-            
+            print("frame_used:", scene_info["frame"], "prdiction:", v, "ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"],scene_info["platform_1P"][0],command)
 
 
         elif self.side == "2P":
