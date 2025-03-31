@@ -1,6 +1,3 @@
-"""
-The template of the script for the machine learning process in game pingpong
-"""
 from ml.prediction import Prediction
 import pygame
 
@@ -18,6 +15,10 @@ class MLPlay:
         self.blocker_before=-1
         self.buffer=[]
         self.time_of_hit=0
+        self.slide=1
+        #1無
+        #2正
+        #3反
     def update(self, scene_info, keyboard=[], *args, **kwargs):
         """
         Generate the command according to the received scene information
@@ -29,23 +30,22 @@ class MLPlay:
             if not self.ball_served:
                 self.ball_served = True
                 return "SERVE_TO_RIGHT"
-            x=-1
+            pballx=-1
             blocker_d=scene_info["blocker"][0]-self.blocker_before
-
-            v=prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],0)
-            x=v[0]
+            down=prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],0,"DOWN",self.slide)
+            pballx=down[0][0]
            # prediction.predict(scene_info["ball"],scene_info["ball_speed"],scene_info["blocker"][0],blocker_d,scene_info["frame"],665)
 
                 
             
             
-            if(x==-1) : command="NONE"
-            elif(x<=scene_info["platform_1P"][0]+10) :
+            if(pballx==-1) : command="NONE"
+            elif(pballx<=scene_info["platform_1P"][0]+10) :
                 command="MOVE_LEFT"
-            elif(x>=scene_info["platform_1P"][0]+30):
+            elif(pballx>=scene_info["platform_1P"][0]+30):
                 command="MOVE_RIGHT"
             # Red 紅色 下方
-            print("frame_used:", scene_info["frame"], "prdiction:", v, "ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"],scene_info["platform_1P"][0],command)
+            print("frame_used:", scene_info["frame"], "prdiction:", down, "ball_speed:", scene_info["ball_speed"], "ball:",scene_info["ball"],"blocker:",scene_info["blocker"],scene_info["platform_1P"][0],command)
 
 
         elif self.side == "2P":

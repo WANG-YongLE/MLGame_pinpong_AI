@@ -1,11 +1,13 @@
 from pygame import Rect
 from mlgame.game import physics
 class Prediction:
-    def predict(self, ball, ball_speed, block, blocker_d, frame, time):
+    def predict(self, ball, ball_speed, block, blocker_d, frame, time,string,slide):
         if (time != 0 and frame % 100 == 0):
             ball_speed = (ball_speed[0] + (1 if ball_speed[0] > 0 else -1),
                           ball_speed[1] + (1 if ball_speed[1] > 0 else -1))
-        if(time>=666) :return ball
+        if(time>=666) :return (ball,ball_speed,block,blocker_d,frame)
+        if(string=="DOWN" and ball[1]==415) :
+            return (ball,ball_speed,block,blocker_d,frame)
         if block == 0:
             blocker_d = 5
         elif block == 170:
@@ -19,13 +21,15 @@ class Prediction:
         # 處理牆壁反彈
         if next_ball_y >= 415:
             next_ball_y = 415
-            a=0
-            if(ball_speed_x==0) : return None
-            else : a= ball_speed_y / ball_speed_x
-            b = ball_y - a * ball_x
-            end=self.find_intersection_row(a,b,415)
             ball_speed_y = -ball_speed_y
-            return (end)
+            if(string=="DOWN") :
+                a=0
+                if(ball_speed_x==0) : return None
+                else : a= -ball_speed_y / ball_speed_x
+                b = ball_y - a * ball_x
+                next_ball_x,next_ball_y=self.find_intersection_row(a,b,415)
+                
+            
         elif next_ball_y <= 80:
             next_ball_y = 80
             if(abs(ball_speed_x)!=abs(ball_speed_y)) :
@@ -69,9 +73,9 @@ class Prediction:
                 next_ball_rect,ball_speed,
                 next_blocker_rect,blocker_speed)
             print((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,frame+1,"S")
-            return self.predict((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,blocker_d,frame+1,time+1)
+            return self.predict((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,blocker_d,frame+1,time+1,string,slide)
         
-        return self.predict((next_ball_x,next_ball_y),(ball_speed_x,ball_speed_y),new_block,blocker_d,frame+1,time+1)  
+        return self.predict((next_ball_x,next_ball_y),(ball_speed_x,ball_speed_y),new_block,blocker_d,frame+1,time+1,string,slide)  
 
     def find_intersection_str(self, a, b, block):
         x = block
