@@ -8,9 +8,9 @@ class Prediction:
         if(time>=666) :return (ball,ball_speed,block,blocker_d,frame)
         if((string=="DOWN" or string=="MINDOW" )and ball[1]==415) :
             return (ball,ball_speed,block,blocker_d,frame)
-        if(string =="UP" and time >=4 and ball[1]==415) :
+        if(string =="UP" and time >=1 and ball[1]==415) :
             return (ball,ball_speed,block,blocker_d,frame)
-        if(string =="UP" and time >=4 and ball[1]==80) :
+        if(string =="UP" and time >=1 and ball[1]==80) :
             return (ball,ball_speed,block,blocker_d,frame)       
         if block == 0:
             blocker_d = 5
