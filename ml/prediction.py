@@ -2,6 +2,7 @@ from pygame import Rect
 from mlgame.game import physics
 class Prediction:
     def predict(self, ball, ball_speed, block, blocker_d, frame, time,string,slide):
+        if(ball_speed[0]==0) :return None
         if (time != 0 and frame % 100 == 0):
             ball_speed = (ball_speed[0] + (1 if ball_speed[0] > 0 else -1),
                           ball_speed[1] + (1 if ball_speed[1] > 0 else -1))
@@ -11,7 +12,8 @@ class Prediction:
         if(string =="UP" and time >=1 and ball[1]==415) :
             return (ball,ball_speed,block,blocker_d,frame)
         if(string =="UP" and time >=1 and ball[1]==80) :
-            return (ball,ball_speed,block,blocker_d,frame)       
+            return (ball,ball_speed,block,blocker_d,frame)     
+          
         if block == 0:
             blocker_d = 5
         elif block == 170:
@@ -32,7 +34,7 @@ class Prediction:
                 b = ball_y - a * ball_x
                 next_ball_x,next_ball_y=self.find_intersection_row(a,b,415)
 
-            ball_speed_y = -ball_speed_y
+            ball_speed_y = -ball_speed[1]
                 
                 
             
@@ -44,7 +46,7 @@ class Prediction:
             elif(slide==3) :
                 origin_ball_speed*=-1
             ball_speed_x=origin_ball_speed if ball_speed[0] > 0 else -origin_ball_speed
-            ball_speed_y = -ball_speed_y
+            ball_speed_y = -ball_speed[1]
             
 
 
@@ -61,7 +63,7 @@ class Prediction:
         # 定義障礙物（擋板）
         blocker_rect = Rect(block, 240, 30, 20)
         blocker_speed = [blocker_d, 0]  
-
+   #     print(ball_speed)
         # 計算下一個位置
         next_ball_rect = ball_rect.move(ball_speed)
         next_blocker_rect = blocker_rect.move(blocker_speed)
@@ -75,16 +77,16 @@ class Prediction:
         # 設定球與擋板的當前與上一幀位置
         ball_sprite = MockSprite(next_ball_rect, ball_rect)
         blocker_sprite = MockSprite(next_blocker_rect, blocker_rect)
-
+   #     print(ball_speed)
         # 測試碰撞
         is_collision = physics.moving_collide_or_contact(ball_sprite, blocker_sprite)           
         if is_collision :
+            # 检查速度是否为0，如果是则设置一个很小的值
             next_ball_rect,next_speed=physics.bounce_off(
                 next_ball_rect,ball_speed,
                 next_blocker_rect,blocker_speed)
       #      print((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,frame+1,"S")
             return self.predict((next_ball_rect.x,next_ball_rect.y),next_speed,new_block,blocker_d,frame+1,time+1,string,slide)
-        
         return self.predict((next_ball_x,next_ball_y),(ball_speed_x,ball_speed_y),new_block,blocker_d,frame+1,time+1,string,slide)  
 
     def find_intersection_str(self, a, b, block):
