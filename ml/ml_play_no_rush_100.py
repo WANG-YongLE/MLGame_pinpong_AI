@@ -26,8 +26,22 @@ class MLPlay:
         #1無
         #2正
         #3反
-
-        self.init=random.randrange(0, 159, 5)
+        data = {}
+        self.init=0
+        filename = "./ml/record/data5.pkl"      
+# 讀取原本的 pickle 檔案
+        if self.side == "1P":
+            data["place"] = list(range(0, 160, 5))
+            data["key"] = 0
+            if os.path.exists(filename):
+                with open(filename, "rb") as f:
+                    data = pickle.load(f)
+            self.init = data["place"][data["key"]]
+            data["key"] = (data["key"] + 1) % len(data["place"])
+         
+            with open(filename, "wb") as f:
+                pickle.dump(data, f) 
+            print(self.init)
         self.serve = random.choice([0, 1])
         self.mock_plat2=100
     def update(self, scene_info, keyboard=[], *args, **kwargs):
@@ -257,15 +271,19 @@ class MLPlay:
         elif command == "NONE":
             move = 0
         
+        blocker_d = scene_info["blocker"][0] - self.blocker_before
         data_row = [
 
             ball_speed_x,       # 球的 x 方向速度
             ball_speed_y,       # 球的 y 方向速度
             ball_x,             # 球的當前 x 座標
             ball_y,             # 球的當前 y 座標
-            platform1_x,         # 平台的 x 座標
+            platform1_x,
+            platform2_x,
+            scene_info["blocker"][0], 
+            blocker_d,      # 平台的 x 座標
             move,               # 平台移動方向
-            platform2_x
+            
         ]
 
         self.data_buffer.append(data_row)
